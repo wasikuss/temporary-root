@@ -21,44 +21,45 @@ atom.contextMenu.add
 
 atom.commands.add '.tree-view .header', 'temporary-root:exit-root-mode', () ->
 	@treeView ?= treeViewPackage.requireMainModule().treeView
-	if @treeView.temporaryRootModule?.enabled is yes
-		@treeView.temporaryRootModule.enabled = no
-
-		@treeView.updateRoots = @treeView.constructor.prototype.updateRoots
+	trm = @treeView.temporaryRootModule
+	if trm.originalRoots.length
+		trm.selectedRoots = trm.originalRoots.pop()
 		@treeView.updateRoots()
 
 atom.commands.add '.tree-view .header', 'temporary-root:enter-root-mode', () ->
 	@treeView ?= treeViewPackage.requireMainModule().treeView
-	unless @treeView.temporaryRootModule?
-		@treeView.temporaryRootModule =
-			enabled: no
-			originalRoots: @treeView.roots
+	trm = @treeView.temporaryRootModule
+	unless trm?
+		trm = @treeView.temporaryRootModule =
+			originalRoots: [@treeView.roots]
+	else
+		trm.originalRoots.push @treeView.roots
 
-	if @treeView.temporaryRootModule.enabled is no
-		@treeView.temporaryRootModule.selectedRoot = @treeView.selectedPath
+	trm.selectedRoots = [@treeView.selectedPath]
 
-		@treeView.updateRoots = () ->
-			for root in @roots
- 				@list[0].removeChild root
-			@roots = []
+	@treeView.updateRoots = () ->
+		for root in @roots
+			try
+				@list[0].removeChild root
+		@roots = []
 
-			@loadIgnoredPatterns()
+		@loadIgnoredPatterns()
 
+		for root in @temporaryRootModule.selectedRoots
+			if root.directory?
+				root = root.directory.path
 			directory = new Directory
-				name: path.basename @temporaryRootModule.selectedRoot
-				fullPath: @temporaryRootModule.selectedRoot
+				name: path.basename root
+				fullPath: root
 				symlink: no
 				isRoot: yes
 				ignoredPatterns: @ignoredPatterns
 				expansionState:
 					isExpanded: yes
 
-			root = new DirectoryView()
-			root.initialize directory
-			@list[0].appendChild root
-			@roots.push root
+			rootView = new DirectoryView()
+			rootView.initialize directory
+			@list[0].appendChild rootView
+			@roots.push rootView
 
-			return
-
-	@treeView.temporaryRootModule.enabled = yes
 	@treeView.updateRoots()

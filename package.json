@@ -1,7 +1,7 @@
 {
   "name": "temporary-root",
   "main": "./lib/init",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Allows setting directory as root to hide other directories.",
   "activationCommands": [],
   "repository":
