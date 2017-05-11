@@ -1,23 +1,21 @@
 {
   "name": "temporary-root",
   "main": "./lib/init",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Allows setting directory as root to hide other directories.",
   "activationCommands": [],
-  "repository":
-  {
+  "repository": {
     "type": "git",
     "url": "https://github.com/wasikuss/temporary-root"
   },
   "readmeFilename": "README.md",
   "license": "MIT",
-  "bugs":
-  {
+  "bugs": {
     "url": "https://github.com/wasikuss/temporary-root/issues"
   },
   "homepage": "https://github.com/wasikuss/temporary-root",
   "engines": {
-    "atom": ">=0.174.0 <2.0.0"
+    "atom": "^1.16.0"
   },
   "dependencies": {}
 }

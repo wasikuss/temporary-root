@@ -40,7 +40,7 @@ atom.commands.add '.tree-view .header', 'temporary-root:enter-root-mode', () ->
   @treeView.updateRoots = () ->
     for root in @roots
       try
-        @list[0].removeChild root
+        @list.removeChild root
     @roots = []
 
     @loadIgnoredPatterns()
@@ -57,9 +57,8 @@ atom.commands.add '.tree-view .header', 'temporary-root:enter-root-mode', () ->
         expansionState:
           isExpanded: yes
 
-      rootView = new DirectoryView()
-      rootView.initialize directory
-      @list[0].appendChild rootView
+      rootView = new DirectoryView(directory).element
+      @list.appendChild rootView
       @roots.push rootView
 
   @treeView.updateRoots()
